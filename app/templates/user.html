@@ -3,7 +3,9 @@
 
 <br>
 
+{% if locations %}
 <h2>{{locations[0].username}}</h2>
+{% endif %}
 
 {% block body %}
   <table class=locations>
