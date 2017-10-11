@@ -1,0 +1,1 @@
+from lib.models.location import Location  # noqa

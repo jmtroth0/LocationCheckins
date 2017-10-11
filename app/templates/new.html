@@ -1,0 +1,74 @@
+{% from "_macros.html" import render_form_field %}
+
+<a href="{{ url_for('location.index') }}">index</a>
+
+
+<form id="person_form"
+      method="POST"
+      enctype="multipart/form-data"
+      action="{{ url_for('location.create')}}">
+  <div class="data-section">
+    {{ render_form_field(form.username) }}
+    {{ render_form_field(form.location_name) }}
+  </div>
+  <p>
+    <button type="submit">Submit</button>
+  </p>
+</form>
+
+<br>
+<br>
+
+
+<h4>Might you mean one of these?</h4>
+<div id="radio-sort">
+  <input type="radio" name="sort" value="relevance" id="rel">
+  <label for="rel">Relevance</label>
+  <input type="radio" name="sort" value="elevation" id="elev">
+  <label for="elev">Elevation</label>
+  <input type="radio" name="sort" value="population" id="pop" checked>
+  <label for="pop">Population</label>
+</div>
+<table class=locations>
+  <thead>
+    <th>Location</th>
+    <th>Country</th>
+  </thead>
+  <tbody id="suggestions-body">
+    <tr><em>No suggestions yet</em></tr>
+  </tbody>
+</table>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="{{url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
+
+<script type="text/javascript">
+
+  var getAutocompletes = function() {
+    var value = $('input#location_name').val();
+    if (value.length >= 2) {  // TODO THROTTLE BETTER
+      var orderby = $('input[name=sort]:checked').val();
+      $.ajax(
+        "{{url_for('location.autocomplete')}}?value=" + value + "&order=" + orderby,
+      ).done(function(response) {
+        if (response.locations) {
+          var html = $("#suggestions-body");
+          html.html("");
+          response.locations.forEach(function(value) {
+            html.append("<tr><td class='location-name'>" + value.name + "</td><td class='country'>" + value.countryName + "</td></tr>");
+          })
+        }
+      })
+    }
+  }
+
+  var input = $('input#location_name');
+  var orderByInput = $('#radio-sort');
+  input.keyup(getAutocompletes);
+  orderByInput.click(getAutocompletes);
+
+  $("#suggestions-body").click('.location-name', function(e) {
+    input.val(e.target.innerText);
+  })
+</script>

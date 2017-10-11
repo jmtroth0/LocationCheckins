@@ -1,0 +1,29 @@
+<a href="{{ url_for('location.new') }}">new</a>
+<a href="{{ url_for('location.index') }}">index</a>
+
+<br>
+
+<h2>{{username}}</h2>
+
+{% block body %}
+  <table class=locations>
+    <thead>
+      <th>Location</th>
+      <th>Timestamp</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+    </thead>
+    <tbody>
+      {% for location in locations %}
+        <tr>
+          <td>{{ location.location_name }}</td>
+          <td>{{ location.timestamp_created }}</td>
+          <td>{{ location.latitude }}</td>
+          <td>{{ location.longitude }}</td>
+        </tr>
+      {% else %}
+        <tr><em>Unbelievable.  No entries here so far</em></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

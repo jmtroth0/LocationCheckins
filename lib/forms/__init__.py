@@ -1,0 +1,1 @@
+from lib.forms.location import LocationForm  #  noqa

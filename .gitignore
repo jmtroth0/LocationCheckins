@@ -1,0 +1,6 @@
+*.pyc
+.python-version
+.vscode
+client/node_modules
+client/build
+client/**/*.css
