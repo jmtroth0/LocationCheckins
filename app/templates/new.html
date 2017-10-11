@@ -44,7 +44,18 @@
 <script>window.jQuery || document.write('<script src="{{url_for('static', filename='jquery.js') }}">\x3C/script>')</script>
 
 <script type="text/javascript">
-
+  var debounce = function (func, wait) {
+    let timeoutId = null;
+    return function () {
+      const context = this, args = arguments;
+      const later = function later() {
+        timeoutId = null;
+        func.apply(context, args);
+      };
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(later, wait);
+    };
+  };
   var getAutocompletes = function() {
     var value = $('input#location_name').val();
     if (value.length >= 2) {  // TODO THROTTLE BETTER
@@ -62,6 +73,8 @@
       })
     }
   }
+
+  getAutocompletes = debounce(getAutocompletes, 100);
 
   var input = $('input#location_name');
   var orderByInput = $('#radio-sort');
